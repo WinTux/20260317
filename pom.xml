@@ -12,6 +12,7 @@
     <modules>
         <module>producto-service</module>
         <module>orden-service</module>
+        <module>eureka-api-gateway</module>
     </modules>
     <groupId>com.pepe</groupId>
 	<artifactId>microservicios</artifactId>

@@ -1,5 +1,6 @@
 package principal.Services;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class OrdenService {
     @Autowired
     private RestTemplate restTemplate;
     private final ProductoClient productoClient;
+    @CircuitBreaker(name = "productoServiceCB", fallbackMethod = "fallbackGetProducto")
     public Orden registrarOrden(Orden orden){
         // Llamada al microservicio de producto-service
         //String productoUrl = "http://localhost:8081/api/v1/productos/"+orden.getProductoId();
@@ -33,6 +35,16 @@ public class OrdenService {
     }
     public List<Orden> listarOrdenes(){
         return ordenRepository.findAll();
+    }
+
+    // Para Circuit Breaker
+    public Orden fallbackGetProducto(Orden o, Throwable throwable){
+        System.out.println("FALLBACK originado por: "+throwable.getMessage());
+        Orden fallblackOrden  = new Orden();
+        fallblackOrden.setProductoId(o.getProductoId());
+        fallblackOrden.setCantidad(o.getCantidad());
+        fallblackOrden.setPrecioTotal(-1.0); // O algún valor por defecto
+        return fallblackOrden;
     }
 }
 

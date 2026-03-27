@@ -14,6 +14,7 @@
         <module>orden-service</module>
         <module>eureka-api-gateway</module>
         <module>servidor-config</module>
+        <module>comunes</module>
     </modules>
     <groupId>com.pepe</groupId>
 	<artifactId>microservicios</artifactId>

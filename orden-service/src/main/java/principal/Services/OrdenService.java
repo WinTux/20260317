@@ -5,10 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import principal.Configs.OrdenServicePublisher;
 import principal.Configs.ProductoClient;
 import principal.Models.Orden;
 import principal.Models.Producto;
 import principal.Repositories.OrdenRepository;
+import principalcomunes.OrdenEvent;
 
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class OrdenService {
     @Autowired
     private RestTemplate restTemplate;
     private final ProductoClient productoClient;
+    @Autowired
+    private OrdenServicePublisher  ordenServicePublisher;
     @CircuitBreaker(name = "productoServiceCB", fallbackMethod = "fallbackGetProducto")
     public Orden registrarOrden(Orden orden){
         // Llamada al microservicio de producto-service
@@ -31,7 +35,13 @@ public class OrdenService {
 
         if(producto == null) throw new RuntimeException("Producto no encontrado");
         orden.setPrecioTotal(producto.getPrecio() * orden.getCantidad());
-        return ordenRepository.save(orden);
+        Orden ordenActual = ordenRepository.save(orden);
+        // Comunicación asíncrona
+        ordenServicePublisher.publicarOrdenEvent(
+                new OrdenEvent(ordenActual.getId(), ordenActual.getProductoId(), ordenActual.getCantidad())
+        );
+
+        return ordenActual;
     }
     public List<Orden> listarOrdenes(){
         return ordenRepository.findAll();

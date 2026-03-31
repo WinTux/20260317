@@ -63,6 +63,11 @@
             <artifactId>comunes</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
     </dependencies>
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

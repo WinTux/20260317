@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.11.1
+    container_name: filebeat
+    user: root
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /home/rusok/Descargas/microservicios/logs_orden:/host-logs-orden:ro
+      - /home/rusok/Descargas/microservicios/logs_producto:/host-logs-producto:ro
+    depends_on:
+      - logstash
+  logstash:
+    image: docker.elastic.co/beats/logstash:8.11.1
+    container_name: logstash
+    ports:
+      - "5044:5044"
+      - "9600:9600"
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf

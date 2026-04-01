@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!-- Variables -->
+    <property name="NOMBRE_APP" value="${spring.application.name:-orden-service}"/>
+    <property name="ARCHIVO_LOG" value="logs_orden/${NOMBRE_APP}.log"/>
+    <!-- Appender para archivo con rotación -->
+    <appender name="ARCHIVO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${ARCHIVO_LOG}</file>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Un archivo por día -->
+            <fileNamePattern>logs_orden/${NOMBRE_APP}-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- Retener 30 días -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="ARCHIVO"/>
+    </root>
+</configuration>

@@ -1,0 +1,15 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /host-logs-orden/*.log
+    fields:
+      service: orden-service
+  - type: log
+    enabled: true
+    paths:
+      - /host-logs-producto/*.log
+    fields:
+      service: producto-service
+output.logstash:
+  hosts: ["logstash:5044"]
